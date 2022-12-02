@@ -1,0 +1,31 @@
+name: Deploy to Ethereum
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - run: npm install
+      - run: npm run compile
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - run: npm install
+      - uses: actions/setup-truffle@v1
+        with:
+          truffle-version: 5.2.5
+          working-directory: smart-contracts
+      - run: truffle migrate --network mainnet
+      - run: truffle test
